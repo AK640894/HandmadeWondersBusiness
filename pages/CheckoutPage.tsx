@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useCart } from '../hooks/useCart';
+import { useAuth } from '../context/AuthContext';
 import Button from '../components/Button';
 
 interface CheckoutPageProps {
@@ -8,11 +9,15 @@ interface CheckoutPageProps {
 
 const CheckoutPage: React.FC<CheckoutPageProps> = ({ navigateToHome }) => {
   const { cartItems, clearCart } = useCart();
+  const { currentUser, addOrder } = useAuth();
   const [isPaid, setIsPaid] = useState(false);
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   const handlePayNow = (e: React.FormEvent) => {
     e.preventDefault();
+    if (currentUser) {
+        addOrder(cartItems);
+    }
     setIsPaid(true);
     clearCart();
   };
@@ -42,7 +47,7 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({ navigateToHome }) => {
               <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
                 <div className="sm:col-span-2">
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email Address</label>
-                  <input type="email" id="email" required className="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+                  <input type="email" id="email" required className="mt-1 block w-full border-gray-300 rounded-md shadow-sm" defaultValue={currentUser?.email || ''} />
                 </div>
                 <div className="sm:col-span-2">
                   <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone Number</label>

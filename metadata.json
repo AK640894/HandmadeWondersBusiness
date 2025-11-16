@@ -1,5 +1,6 @@
 {
   "name": "Handmade Wonders",
   "description": "A modern, clean, and artisanal e-commerce website concept focused on selling unique, high-quality handicraft items like paper quilled jewelry and customized nameplates, featuring Gemini-powered design assistance.",
-  "requestFramePermissions": []
+  "requestFramePermissions": [],
+  "env": []
 }

@@ -25,4 +25,6 @@ export type View =
   | { name: 'cart' }
   | { name: 'checkout' }
   | { name: 'about' }
-  | { name: 'all-products' };
+  | { name: 'all-products' }
+  | { name: 'login' }
+  | { name: 'my-orders' };

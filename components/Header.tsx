@@ -1,5 +1,6 @@
 import React from 'react';
 import { useCart } from '../hooks/useCart';
+import { useAuth } from '../context/AuthContext';
 import { CartIcon, SparkleIcon } from './Icon';
 
 interface HeaderProps {
@@ -8,10 +9,26 @@ interface HeaderProps {
   navigateToEarrings: () => void;
   navigateToNameplates: () => void;
   navigateToAbout: () => void;
+  navigateToLogin: () => void;
+  navigateToMyOrders: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ navigateToHome, navigateToCart, navigateToEarrings, navigateToNameplates, navigateToAbout }) => {
+const Header: React.FC<HeaderProps> = ({
+  navigateToHome,
+  navigateToCart,
+  navigateToEarrings,
+  navigateToNameplates,
+  navigateToAbout,
+  navigateToLogin,
+  navigateToMyOrders,
+}) => {
   const { totalItems } = useCart();
+  const { currentUser, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigateToHome();
+  };
 
   return (
     <header className="bg-brand-cream/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
@@ -29,9 +46,18 @@ const Header: React.FC<HeaderProps> = ({ navigateToHome, navigateToCart, navigat
               <button onClick={navigateToEarrings} className="text-gray-700 hover:bg-brand-sage/20 hover:text-brand-dark px-3 py-2 rounded-md text-sm font-medium">Earrings</button>
               <button onClick={navigateToNameplates} className="text-gray-700 hover:bg-brand-sage/20 hover:text-brand-dark px-3 py-2 rounded-md text-sm font-medium">Nameplates</button>
               <button onClick={navigateToAbout} className="text-gray-700 hover:bg-brand-sage/20 hover:text-brand-dark px-3 py-2 rounded-md text-sm font-medium">About</button>
+              {currentUser && <button onClick={navigateToMyOrders} className="text-gray-700 hover:bg-brand-sage/20 hover:text-brand-dark px-3 py-2 rounded-md text-sm font-medium">My Orders</button>}
             </div>
           </div>
-          <div className="flex items-center">
+          <div className="flex items-center gap-4">
+            {currentUser ? (
+              <div className="flex items-center gap-4">
+                 <span className="text-sm text-gray-800 font-medium hidden sm:block">{currentUser.email}</span>
+                <button onClick={handleLogout} className="text-gray-700 hover:bg-brand-sage/20 hover:text-brand-dark px-3 py-2 rounded-md text-sm font-medium">Logout</button>
+              </div>
+            ) : (
+               <button onClick={navigateToLogin} className="hidden md:block text-gray-700 hover:bg-brand-sage/20 hover:text-brand-dark px-3 py-2 rounded-md text-sm font-medium">Login</button>
+            )}
             <button onClick={navigateToCart} className="relative p-2 rounded-full text-gray-700 hover:bg-brand-sage/20 hover:text-brand-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
               <span className="sr-only">View shopping cart</span>
               <CartIcon className="h-6 w-6" />
